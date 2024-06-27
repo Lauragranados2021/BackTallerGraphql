@@ -1,0 +1,32 @@
+{
+  "name": "backtallergraphql",
+  "version": "1.0.0",
+  "description": "Back taller 1 segundo 50 electiva web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lauragranados2021/BackTallerGraphql.git"
+  },
+  "author": "Laura Nicol Granados Bayona",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lauragranados2021/BackTallerGraphql/issues"
+  },
+  "homepage": "https://github.com/Lauragranados2021/BackTallerGraphql#readme",
+  "dependencies": {
+    "apollo-server-express": "^3.13.0",
+    "cors": "^2.8.5",
+    "date-fns": "^3.6.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "graphql": "^16.9.0",
+    "mongoose": "^8.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
