@@ -5,7 +5,6 @@ const typeDefs = gql`
     ContractStartDate: String
     ContractEndDate: String
     price: Int
-    oficinaID: ID
   }
   type Oficina {
     id: ID!
@@ -33,7 +32,7 @@ const typeDefs = gql`
       ContractStartDate: String
       ContractEndDate: String
       price: Int
-      oficinaID: ID
+      IDoficina: ID
     ): Alquiler
     deleteOficina(id: ID!): Oficina
     deleteAlquiler(id: ID!): Alquiler
@@ -48,7 +47,7 @@ const typeDefs = gql`
       ContractStartDate: String
       ContractEndDate: String
       price: Int
-      oficinaID: ID
+      IDoficina: ID
     ): Alquiler
   }
 

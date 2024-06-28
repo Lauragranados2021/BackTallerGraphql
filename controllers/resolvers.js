@@ -12,7 +12,7 @@ Query:{
     getOficina:async(_,args)=>{
         try{
             const id=args.id
-            const data=await oficina.findById(id).populate("alquiler");
+            const data=await oficina.findOne({id:id}).populate("alquiler");
             return data
         }
         catch(err){
@@ -38,14 +38,15 @@ Query:{
     },
     getAlquiler:async(_,args)=>{
         try{
-            const data=await alquiler.findById(args.id)
-            const formattedcontract = data.map(reservation => ({
+            const id=args.id
+            const reservation=await alquiler.findOne({id:id})
+            const formattedcontract = {
                 id: reservation.id,
                 ContractStartDate: format(new Date(reservation.ContractStartDate), 'yyyy-MM-dd'),
                 ContractEndDate: format(new Date(reservation.ContractEndDate), 'yyyy-MM-dd'),
                 price: reservation.price,
                 oficinaID: reservation.oficinaID,
-              }));
+              };
               return formattedcontract;
             
 
@@ -68,12 +69,14 @@ Mutation:{
     },
     createAlquiler:async(_,args)=>{
         try{
-            const {id,ContractStartDate,ContractEndDate,price,oficinaID}=args
-            const alquiOfi=await oficina.findById(oficinaID)
+            const {id,ContractStartDate,ContractEndDate,price,IDoficina}=args
+            
+            const alquiOfi=await oficina.findOne({id:IDoficina})
             if(!alquiOfi){
                 throw new Error("Oficina no existe")
             }
-            const data= new alquiler({id,ContractStartDate,ContractEndDate,price,oficinaID})
+            const ofici=alquiOfi._id
+            const data= new alquiler({id,ContractStartDate,ContractEndDate,price,ofici})
             await data.save()
             alquiOfi.alquiler.push(data)
             await alquiOfi.save()
@@ -85,7 +88,7 @@ Mutation:{
     },
     deleteOficina:async(_,args)=>{
         try{
-            const data=await  oficina.findById(args.id)
+            const data=await  oficina.findOne({id:args.id})
 
             if(!data){
                 throw new Error("Oficina no existe")
@@ -102,7 +105,8 @@ Mutation:{
     },
     deleteAlquiler:async(_,args)=>{
         try{
-            const data=await alquiler.findById(args.id)
+            const id=args.id
+            const data=await alquiler.findOne({id:id})
             
             if(!data){
                 throw new Error("Alquiler no existe")
@@ -120,7 +124,7 @@ Mutation:{
     updateOficina:async(_,args)=>{
         try{
             const {id,name,direccion,capacidad}=args
-            const data=await oficina.findOne({id:id})
+            const data=await oficina.findOne({id:id}).populate("alquiler");
             if(!data){
                 throw new Error("Oficina no existe")
             }
@@ -130,13 +134,15 @@ Mutation:{
             data.capacidad=capacidad
             await data.save()
             return data
+
+           
         }catch(err){
             console.log(err)
         }
     },
     updateAlquiler:async(_,args)=>{
         try{
-            const {id,ContractStartDate,ContractEndDate,price,oficinaID}=args
+            const {id,ContractStartDate,ContractEndDate,price,IDoficina}=args
             const data=await alquiler.findOne({id:id})
             console.log(data)
             if(!data){
@@ -146,7 +152,7 @@ Mutation:{
             console.log(ofic)
             ofic.alquiler.pull(data._id)
             await ofic.save()
-            const ofinw=await oficina.findById(oficinaID)
+            const ofinw=await oficina.findOne({id:IDoficina})
             console.log(ofinw)
             if(!ofinw){
                 throw new Error("Oficina no existe")
@@ -156,7 +162,7 @@ Mutation:{
             data.ContractStartDate=ContractStartDate
             data.ContractEndDate=ContractEndDate
             data.price=price
-            data.oficinaID=oficinaID
+            data.oficinaID=ofinw._id
             ofinw.alquiler.push(data._id)
             await ofinw.save()
             await data.save()
