@@ -111,9 +111,13 @@ Mutation:{
             if(!data){
                 throw new Error("Alquiler no existe")
             }
-            const ofi=await oficina.findById(data.oficinaID)
-            ofi.alquiler.pull(data)
-            await ofi.save()
+            const ofic = await oficina.findOne({ "alquiler": data._id });
+    console.log("Oficina encontrada: " + ofic);
+    if (!ofic) {
+        throw new Error("Oficina con este alquiler no encontrada");
+    }
+            ofic.alquiler.pull(data._id)
+            await ofic.save()
             await data.deleteOne(data._id)
             return data
 
@@ -165,7 +169,6 @@ Mutation:{
             data.ContractStartDate=ContractStartDate
             data.ContractEndDate=ContractEndDate
             data.price=price
-            data.oficinaID=ofinw._id
             ofinw.alquiler.push(data._id)
             await ofinw.save()
             await data.save()
