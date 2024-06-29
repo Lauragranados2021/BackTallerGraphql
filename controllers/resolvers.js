@@ -76,7 +76,7 @@ Mutation:{
                 throw new Error("Oficina no existe")
             }
             const ofici=alquiOfi._id
-            const data= new alquiler({id,ContractStartDate,ContractEndDate,price,ofici})
+            const data= new alquiler({id,ContractStartDate,ContractEndDate,price})
             await data.save()
             alquiOfi.alquiler.push(data)
             await alquiOfi.save()
