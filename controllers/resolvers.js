@@ -148,8 +148,11 @@ Mutation:{
             if(!data){
                 throw new Error("Alquiler no existe")
             }
-            const ofic=await oficina.findById(data.oficinaID)
-            console.log(ofic)
+            const ofic = await oficina.findOne({ "alquiler": data._id });
+    console.log("Oficina encontrada: " + ofic);
+    if (!ofic) {
+        throw new Error("Oficina con este alquiler no encontrada");
+    }
             ofic.alquiler.pull(data._id)
             await ofic.save()
             const ofinw=await oficina.findOne({id:IDoficina})
